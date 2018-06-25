@@ -169,9 +169,6 @@
 
     var channel = pusher.subscribe('{{$chatChannel}}');
     channel.bind('my-event', addMessage);
-    channel.bind('pusher:subscription_error', function(data) {
-      console.log(data);
-    });
 
 </script>
 

@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="https://pusher-community.github.io/real-time-laravel/assets/laravel_app/activity-stream-tweaks.css" />
 
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="//js.pusher.com/3.0/pusher.min.js"></script>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
 
     <script>
         // Ensure CSRF token is sent with AJAX requests
@@ -19,10 +19,7 @@
             }
         });
 
-        // Added Pusher logging
-        Pusher.log = function(msg) {
-            console.log(msg);
-        };
+        Pusher.logToConsole = true;
     </script>
 </head>
 <body>
@@ -147,7 +144,7 @@
     function addStatusUpdate(data) {
         addActivity('status-update', data);
     }
-    
+
     // Handle the status update liked event
     function addStatusUpdate(data) {
         addActivity('status-update-liked', data);
@@ -158,7 +155,15 @@
 
     /***********************************************/
 
-    var pusher = new Pusher('{{env("PUSHER_KEY")}}');
+    var pusher = new Pusher('{{env("PUSHER_KEY")}}', {
+      authEndpoint: '/chat/auth',
+      cluster: '{{env("PUSHER_CLUSTER")}}',
+      auth: {
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      }
+    });
 
     // TODO: Subscribe to the channel
     var channel = pusher.subscribe('activities');

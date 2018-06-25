@@ -42,13 +42,19 @@
             </div>
         </div>
     </body>
-    <script src="//js.pusher.com/3.0/pusher.min.js"></script>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
     <script>
-    Pusher.log = function(msg) {
-      console.log(msg);
-    };
+    Pusher.logToConsole = true;
 
-    var pusher = new Pusher("{{env("PUSHER_KEY")}}")
+    var pusher = new Pusher('{{env("PUSHER_KEY")}}', {
+      authEndpoint: '/chat/auth',
+      cluster: '{{env("PUSHER_CLUSTER")}}',
+      auth: {
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      }
+    });
     var channel = pusher.subscribe('test-channel');
     channel.bind('test-event', function(data) {
       alert(data.text);

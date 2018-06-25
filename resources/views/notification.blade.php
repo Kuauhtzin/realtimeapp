@@ -9,7 +9,7 @@
 
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <script src="//js.pusher.com/3.0/pusher.min.js"></script>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 
@@ -21,10 +21,7 @@
             }
         });
 
-        // Added Pusher logging
-        Pusher.log = function(msg) {
-            console.log(msg);
-        };
+        Pusher.logToConsole = true;
     </script>
 </head>
 <body>
@@ -85,8 +82,15 @@ function showNotification(data) {
     toastr.success(text, null, {"positionClass": "toast-bottom-left"});
 }
 
-var pusher = new Pusher('{{env("PUSHER_KEY")}}');
-// TODO: Subscribe to the channel
+var pusher = new Pusher('{{env("PUSHER_KEY")}}', {
+  authEndpoint: '/chat/auth',
+  cluster: '{{env("PUSHER_CLUSTER")}}',
+  auth: {
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  }
+});// TODO: Subscribe to the channel
 var channel = pusher.subscribe('notifications');
 // TODO: Bind to the event and pass in the notification handler
 channel.bind('new-notification', function(data) {
