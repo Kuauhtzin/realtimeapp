@@ -16,8 +16,11 @@ Auth requires github account. (Laravel Socialite 2.0)
 ### Other Configurations needed:
 
 * PHP config file (php.ini)
-Requires enabled *openssl* extension & ![https://curl.haxx.se/docs/caextract.html](https://curl.haxx.se/docs/caextract.html)
+
+Requires enabled *openssl* extension & !(https://curl.haxx.se/docs/caextract.html)
+
 curl.cainfo="ROUTE\\TO\\CACERT.PEM"
+
 openssl.cafile"ROUTE\\TO\\CACERT.PEM"
 
 * Apache enable *mod_ssl*
